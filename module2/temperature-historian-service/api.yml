@@ -1,0 +1,86 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: IoT Historian API
+  description: >-
+    Sample API for keeping a history of IoT devices.
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+schemes:
+  - http
+host: historian.api
+basePath: /v1
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /deviceData/{deviceId}:
+    post:
+      summary: Add data to the device history
+      description: >-
+        Adds a data point from an IoT device. Once saved, calculates the running average of the existing data, saves it idempotentently and returns it.
+      operationId: addDeviceData
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: deviceId
+          description: 'Device Id'
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          minLength: 36
+          maxLength: 36
+        - in: query
+          name: datapointId
+          description: 'Each data point needs to have a unique ID'
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          minLength: 36
+          maxLength: 36
+        - in: query
+          name: timestamp
+          description: 'Timestamp when received from the device.'
+          required: true
+          type: string
+          format: date-time
+        - in: query
+          name: value
+          description: 'Value registered by the device.'
+          required: true
+          type: number
+          format: float
+      responses:
+        201:
+          description: Data added successfully.
+          schema:
+            type: number
+            format: float
+        400:
+          $ref: '#/responses/Standard401InvalidInput'
+        500:
+          $ref: '#/responses/Standard500ErrorResponse'
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        description: 'Error code set by the operation.'
+        type: string
+      message:
+        description: 'Message related with the error.'
+        type: string
+responses:
+  Standard500ErrorResponse:
+    description: An unexpected error occurred.
+    schema:
+      $ref: '#/definitions/Error'
+  Standard401InvalidInput:
+    description: Invalid input parameter.
+    schema:
+      $ref: '#/definitions/Error'
