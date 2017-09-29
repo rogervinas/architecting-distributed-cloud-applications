@@ -4,7 +4,7 @@
 
 We will go through a set of steps for building a sample application with multiple microservices.
 
-## prerequisites
+## Prerequisites
 
 This lab has a dependency on the following technologies. These will need to be installed on a development machine to complete the lab.
 
