@@ -44,11 +44,11 @@ This lab has a dependency on the following technologies. These will need to be i
 
 5.  Create a new file to contain the class representing the entity, `InventoryRecord`
 
-        ```csharp using System;namespace DbWriter{  public class InventoryRecord  {   public Guid ItemId { get; set; }   public string ItemName { get; set; }   public int AvailableItems { get; set; }  }}
+        ```using System;namespace DbWriter{  public class InventoryRecord  {   public Guid ItemId { get; set; }   public string ItemName { get; set; }   public int AvailableItems { get; set; }  }}
 
-    7\. Create a new file to contain the DBContext class <span class="MathJax_Preview" style="color: inherit; display: none;"><span class="MathJax_SVG" id="MathJax-Element-1-Frame" tabindex="0" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle displaystyle="true"><mi>I</mi><mi>n</mi><mi>v</mi><mi>e</mi><mi>n</mi><mo>→</mo><mi>r</mi><mi>y</mi><mi>D</mi><mi>b</mi><mi>C</mi><mi>o</mi><mi>n</mi></mstyle></math><mstyle displaystyle=&quot;true&quot;><mi>I</mi><mi>n</mi><mi>v</mi><mi>e</mi><mi>n</mi><mo>&amp;#x2192;</mo><mi>r</mi><mi>y</mi><mi>D</mi><mi>b</mi><mi>C</mi><mi>o</mi><mi>n</mi><mrow><mtext></mtext></mrow></mstyle></math>" role="presentation" style="font-size: 100%; display: inline-block; position: relative;"><script type="math/asciimath" id="MathJax-Element-1">InventoryDbContext</script>. Entity Framework supports the concept of optimistic concurrency - a property on your entity is designated as a concurrency token, and EF detects concurrent modifications by checking whether that token has changed since the entity was read. You can read more about this in the EF docs. Although applications can update concurrency tokens themselves, we frequently rely on the database automatically updating a column on update - a "last modified" timestamp, an SQL Server rowversion, etc. Unfortunately PostgreSQL doesn't have such auto-updating columns - but there is one feature that can be used for concurrency token. All PostgreSQL have a set of implicit and hidden system columns, among which xmin holds the ID of the latest updating transaction. Since this value automatically gets updated every time the row is changed, it is ideal for use as a concurrency token.
+    7\. Create a new file to contain the DBContext class. Entity Framework supports the concept of optimistic concurrency - a property on your entity is designated as a concurrency token, and EF detects concurrent modifications by checking whether that token has changed since the entity was read. You can read more about this in the EF docs. Although applications can update concurrency tokens themselves, we frequently rely on the database automatically updating a column on update - a "last modified" timestamp, an SQL Server rowversion, etc. Unfortunately PostgreSQL doesn't have such auto-updating columns - but there is one feature that can be used for concurrency token. All PostgreSQL have a set of implicit and hidden system columns, among which xmin holds the ID of the latest updating transaction. Since this value automatically gets updated every time the row is changed, it is ideal for use as a concurrency token.
 
-        ```csharp
+        ```
         using System;
         using Microsoft.EntityFrameworkCore;
 
@@ -93,8 +93,10 @@ This lab has a dependency on the following technologies. These will need to be i
 
     ## Handling Optimistic Concurrency
 
-    1.  Update the program.cs with the following code: <span class="MathJax_Preview" style="color: inherit; display: none;"><span class="MathJax_SVG" id="MathJax-Element-2-Frame" tabindex="0" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;><span class="MJX_Assistive_MathML" role="presentation"><mstyle displaystyle=&quot;true&quot;><mo></mo></mstyle></math>" role="presentation" style="font-size: 100%; display: inline-block; position: relative;">`csharp using System; using System.Collections.Generic; using System.Linq; using System.Threading; using System.Threading.Tasks; using Microsoft.EntityFrameworkCore;
-
+    1.  Update the program.cs with the following code:
+    
+    ```using System; using System.Collections.Generic; using System.Linq; using System.Threading; using System.Threading.Tasks; using Microsoft.EntityFrameworkCore;
+  
         namespace DbWriter { class Program { static void Main(string[] args) {
                 var itemIds = new List<Guid>();
 
